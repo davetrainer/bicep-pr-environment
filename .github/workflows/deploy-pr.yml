@@ -23,6 +23,8 @@ jobs:
         docker push $IMAGE_NAME
 
   build-and-deploy-infra:
+    needs:
+      - build-and-deploy
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -45,6 +47,6 @@ jobs:
       with:
         subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
         resourceGroupName: ${{ secrets.AZURE_RG }}
-        template: ./main.bicep
+        template: ./src/main.bicep
         parameters: envName=$PR_NUMBER containerImage=$IMAGE_NAME containerPort=80 registryServer=${{ secrets.REGISTRY_SHORT_NAME }} registryUserName=${{ secrets.REGISTRY_USERNAME }} registryPassword=${{ secrets.REGISTRY_PASSWORD }} registryResourceGroup=${{ secrets.REGISTRY_AZURE_RG }}
         failOnStdErr: false

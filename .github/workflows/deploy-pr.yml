@@ -1,4 +1,4 @@
-on: [push]
+on: pull_request
 name: Azure Deploy PR Environment
 
 env:
@@ -34,7 +34,8 @@ jobs:
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    - name: Deploy resources
+    - name: Deploy Resources
+      id: deploy
       uses: azure/arm-deploy@v1
       with:
         subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}

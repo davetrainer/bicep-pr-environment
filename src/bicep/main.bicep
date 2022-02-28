@@ -14,7 +14,7 @@ module log 'log.bicep' = {
     name: 'log-analytics-workspace'
     params: {
       location: location
-      name: 'log-${envName}'
+      name: 'log'
     }
 }
 
@@ -29,7 +29,7 @@ module containerRegistry 'container-registry.bicep' = {
 module containerAppEnvironment 'container-app-environment.bicep' = {
   name: 'container-app-environment'
   params: {
-    name: 'container-env-${envName}'
+    name: 'container-env'
     location: location
     logCustomerId: log.outputs.logCustomerId
     logClientSecret: log.outputs.logClientSecret

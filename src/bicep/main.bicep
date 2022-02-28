@@ -31,7 +31,7 @@ module containerAppEnvironment 'container-app-environment.bicep' = {
   params: {
     name: 'container-env-${envName}'
     location: location
-    logCustomerId:log.outputs.logCustomerId
+    logCustomerId: log.outputs.logCustomerId
     logClientSecret: log.outputs.logClientSecret
   }
 }

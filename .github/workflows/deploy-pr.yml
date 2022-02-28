@@ -11,7 +11,6 @@ jobs:
       run:
         working-directory: ./src/api
     steps:
-    - name: 'Build and push docker image'
     - uses: actions/checkout@v2
     - uses: azure/docker-login@v1
       with:

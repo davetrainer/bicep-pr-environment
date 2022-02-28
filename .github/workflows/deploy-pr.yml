@@ -1,4 +1,4 @@
-on: [push]
+on: pull_request
 name: Azure Deploy PR Environment
 
 env:
@@ -11,6 +11,7 @@ jobs:
       run:
         working-directory: ./src/api
     steps:
+    - name: 'Build and push docker image'
     - uses: actions/checkout@v2
     - uses: azure/docker-login@v1
       with:
@@ -34,7 +35,8 @@ jobs:
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    - name: Deploy resources
+    - name: Deploy Resources
+      id: deploy
       uses: azure/arm-deploy@v1
       with:
         subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}

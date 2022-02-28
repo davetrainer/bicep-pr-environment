@@ -15,5 +15,7 @@ resource logWorkSpace 'Microsoft.OperationalInsights/workspaces@2021-12-01-previ
   })
 }
 
+var sharedKey = logWorkSpace.listKeys().primarySharedKey
+
 output logCustomerId string = logWorkSpace.properties.customerId
-output logClientSecret string = logWorkSpace.listKeys().primarySharedKey
+output logClientSecret string = sharedKey

@@ -1,6 +1,8 @@
 param name string
 param location string
+@secure()
 param logCustomerId string
+@secure()
 param logClientSecret string
 
 resource environment 'Microsoft.Web/kubeEnvironments@2021-03-01' = {

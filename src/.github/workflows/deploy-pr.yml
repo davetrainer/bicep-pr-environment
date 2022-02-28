@@ -1,0 +1,59 @@
+on: [push]
+name: Azure Deploy PR Environment
+
+env:
+  PR_NUMBER: ${{ github.event.number }}
+  IMAGE_NAME: ${{ secrets.REGISTRY_LOGIN_SERVER }}/weather-api:${{ github.sha }}
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./src/api
+    steps:
+    # checkout the repo
+    - name: 'Checkout GitHub Action'
+      uses: actions/checkout@main
+      
+    - name: 'Login via Azure CLI'
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+    
+    - name: 'Build and push image'
+      uses: azure/docker-login@v1
+      with:
+        login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
+        username: ${{ secrets.REGISTRY_USERNAME }}
+        password: ${{ secrets.REGISTRY_PASSWORD }}
+    - run: |
+        docker build . -t $IMAGE_NAME
+        docker push $IMAGE_NAME
+
+  build-and-deploy-infra:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./src/bicep
+    steps:
+
+      # Checkout code
+    - name: 'Checkout GitHub Action'
+    - uses: actions/checkout@main
+
+      # Log into Azure
+    - name: 'Login via Azure CLI'
+    - uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      # Deploy Bicep
+    - name: Deploy resources
+      uses: azure/arm-deploy@v1
+      with:
+        subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
+        resourceGroupName: ${{ secrets.AZURE_RG }}
+        template: ./main.bicep
+        parameters: envName=$PR_NUMBER containerImage=$IMAGE_NAME containerPort=80 registryServer=${{ secrets.REGISTRY_SHORT_NAME }} registryUserName=${{ secrets.REGISTRY_USERNAME }} registryPassword=${{ secrets.REGISTRY_PASSWORD }} registryResourceGroup=${{ secrets.REGISTRY_AZURE_RG }}
+        failOnStdErr: false

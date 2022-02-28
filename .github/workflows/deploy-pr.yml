@@ -33,12 +33,12 @@ jobs:
       uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
-        
+
     - name: Deploy resources
       uses: azure/arm-deploy@v1
       with:
         subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
         resourceGroupName: ${{ secrets.AZURE_RG }}
         template: ./src/bicep/main.bicep
-        parameters: envName=$GITHUB_RUN_NUMBER containerImage=$IMAGE_NAME containerPort=80 registryServer=${{ secrets.REGISTRY_SHORT_NAME }} registryUserName=${{ secrets.REGISTRY_USERNAME }} registryPassword=${{ secrets.REGISTRY_PASSWORD }} registryResourceGroup=${{ secrets.REGISTRY_AZURE_RG }}
+        parameters: envName=$GITHUB_RUN_NUMBER containerImage=$IMAGE_NAME containerPort=80 registryServer=${{ secrets.REGISTRY_SHORT_NAME }} registryUsername=${{ secrets.REGISTRY_USERNAME }} registryPassword=${{ secrets.REGISTRY_PASSWORD }} registryResourceGroup=${{ secrets.REGISTRY_AZURE_RG }}
         failOnStdErr: false
